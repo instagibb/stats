@@ -1,23 +1,28 @@
 'use strict'
 
 import React from 'react'
-import stravaV3 from 'strava-v3' 
+import { requestBuilder, doRequest } from './utils/requestUtils'
 
 export default class extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { athlete: null }
+  }
+  componentDidMount() {
+    this.doNeedful()
+  }
   doNeedful() {
-    stravaV3.athlete.get({ }, (err,payload) => {
-      if(!err) {
-        console.log(payload)
-      }
-      else {
-        console.log(err)
-      }
-    })
+    doRequest(
+        requestBuilder({ url: `athletes/2161844` }),
+        (athlete) => {
+          this.setState({ athlete: athlete })
+        }
+      )  
   }
   render() {
-    const blah = this.doNeedful()
+    const ath = this.state.athlete
     return (
-      <div>{blah}</div>
+      <div><h1>{ ath ? `${ath.firstname} ${ath.lastname}` : 'Loading...' }</h1></div>
     )
   }
 }

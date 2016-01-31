@@ -36,10 +36,10 @@
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.12.10",
-    "webpack-dev-server": "^1.14.0"
+    "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "axios": "^0.8.1",
+    "axios": "^0.9.1",
     "bootstrap": "^3.3.6",
     "history": "^1.17.0",
     "jquery": "^2.2.0",

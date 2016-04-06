@@ -24,19 +24,10 @@ new WebpackDevServer(webpack(config), {
 	publicPath: config.output.publicPath,
 	contentBase: config.output.path,
 	historyApiFallback: true,
-	https: false,
-	proxy: {
-    '/api/v3/*': {
-      target: 'https://www.strava.com',
-      secure: false,
-      auth: `Bearer ${strava_config.access_token}`
-    }
-  },
-
+	https: false
 }).listen(8000, '0.0.0.0', function (err) {
 	if (err) {
 		console.log(err);
 	}
-
- console.log('Listening at 0.0.0.0:8000');
+  console.log('Listening at 0.0.0.0:8000');
 });

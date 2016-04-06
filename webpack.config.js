@@ -49,7 +49,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Strava stats',
       mobile: true,
-      template: 'node_modules/html-webpack-template/index.html',
+      inject: false,
+      template: 'node_modules/html-webpack-template/index.ejs',
       appMountId: 'app'
     }),
     new ExtractTextPlugin("styles.css")

@@ -11,7 +11,7 @@ export default class extends React.Component {
         <Navbar>
           <Navbar.Header>
             <Navbar.Brand>
-              Strava Stats
+              Poor mans trail counter (powered by Strava)
             </Navbar.Brand>    
           </Navbar.Header>
         </Navbar>

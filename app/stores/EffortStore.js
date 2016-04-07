@@ -9,6 +9,7 @@ import _ from 'lodash'
 
 export default Reflux.createStore({
   listenables: EffortActions,
+  loading: false,
   data: {
     segments: []
   },
@@ -21,34 +22,44 @@ export default Reflux.createStore({
   getInitialState() {
     return this.data
   },
-  getAllEffortsForSegments() {
+  getAllEffortsForSegments(s, e) {
     const segs = SegmentStore.getSegments()
+    let start = s
+    let end = e
+    if(!s && !e) {
+      start = moment.utc().startOf('month').toISOString()
+      end = moment.utc().endOf('month').toISOString()
+    } else {
+      segs.map(s => { 
+        _.unset(s, 'effortsmonth') 
+      })
+    }
     this.data.segments = segs
     segs.map(s => {
-      this.getAllTheThings(s.id)
+      this.getAllTheEfforts(s.id, start, end)
     })
   },
   getEmBoys(total, seg, s, e, p) {
     doRequest(requestBuilder({ url: `segments/${seg}/all_efforts?per_page=200&start_date_local=${s}&end_date_local=${e}&page=${p}` }),
     (efforts) => {
-      console.log(`EFFORTS: ${efforts.length}`)
       total = total.concat(efforts)
-      console.log(`TOTAL: ${total.length}`)
       if(efforts.length == 200) {
-        console.log('getting more efforts')
-        this.getEmBoys(total, s, e, ++p)
+        this.getEmBoys(total, seg, s, e, ++p)
       }
       else {
         _.find(this.data.segments, { id: seg }).effortsmonth = total
+        this.data.segments = _.sortBy(this.data.segments, [ 'id' ])
         this.trigger(this.data)
       }
     })
   },
-  getAllTheThings(seg) {
-    // Make array
-    const s = moment().startOf('month').toISOString()
-    const e = moment().endOf('month').toISOString()
-    // Keep executing till size != 200
-    this.getEmBoys([], seg, s, e, 1)
+  getAllTheEfforts(seg, start, end) {
+    this.getEmBoys([], seg, start, end, 1)
+  },
+  setLoading(load) {
+    this.loading = load
+  },
+  isLoading() {
+    return this.loading
   }
 })

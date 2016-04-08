@@ -1,0 +1,8 @@
+'use strict'
+
+// Strava proxy
+const endpoint = 'http://0.0.0.0:8001'
+
+export default {
+  endpoint: endpoint
+}

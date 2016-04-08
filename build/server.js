@@ -4,11 +4,11 @@
 
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
-var config = require('./webpack.config');
+var config = require('./dev-webpack.config');
 
 var express = require('express');  
 var request = require('request');
-var strava_config = require('./data/strava_config');
+var strava_config = require('../data/strava_config');
 var stravaproxy = express();
 
 stravaproxy.use(function(req, res, next) {

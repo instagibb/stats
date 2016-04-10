@@ -76,6 +76,7 @@ export default React.createClass({
             </DropdownButton>
           </ButtonGroup>
         </div>
+        <hr />
         <div>
           <SpinnerWrapper showSpinner={ _.isEmpty(segs) }>
             <SegmentList segments={segs} />

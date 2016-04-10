@@ -39,7 +39,7 @@ export default React.createClass({
 
       return (
         <div>
-          <BootstrapTable data={rows} striped condensed hover search={true} pagination={rows.length > 10} options={ { sizePerPage: 25, noDataText: 'There is no segment data' } }>
+          <BootstrapTable data={rows} striped condensed hover search={false} pagination={rows.length > 10} options={ { sizePerPage: 25, noDataText: 'There is no segment data' } }>
             <TableHeaderColumn dataField="id" isKey={true}>Segment ID</TableHeaderColumn>
             <TableHeaderColumn dataField="name">Segment Name</TableHeaderColumn>
             <TableHeaderColumn dataField="location">Location</TableHeaderColumn>

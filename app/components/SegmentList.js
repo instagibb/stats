@@ -2,7 +2,9 @@
 
 import React from 'react'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
+import Bar from './loading/Bar'
 import _ from 'lodash'
+import numeral from 'numeral'
 
 export default React.createClass({
   propTypes: {
@@ -11,6 +13,7 @@ export default React.createClass({
 
   render() {
     const segments = this.props.segments
+    const bar = <Bar />
     if (!_.isEmpty(segments)) { 
       let rows = segments.map((segment, index) => {
         let row = {}
@@ -20,11 +23,15 @@ export default React.createClass({
         row.alltime = segment.effort_count
         let effs = segment.effortsmonth
         if(!_.isEmpty(effs)) {
-          row.monthly = effs.length
+          row.monthly = numeral(effs.length).format('0,0')
           //_.filter(effs, (e, d, i) => !e.hidden)
-          row.unique = _.uniqWith(effs, (a, b) => {
+          row.unique = numeral(_.uniqWith(effs, (a, b) => {
             return a.athlete.id === b.athlete.id
-          }).length
+          }).length).format('0,0')
+        }
+        else {
+          row.monthly = bar
+          row.unique = bar
         }
  
         return row

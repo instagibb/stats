@@ -5,6 +5,7 @@ import Reflux from 'reflux'
 import EffortActions from '../actions/EffortActions'
 import EffortStore from '../stores/EffortStore'
 import SegmentList from '../components/SegmentList'
+import SpinnerWrapper from '../components/loading/SpinnerWrapper'
 
 import { ButtonGroup, DropdownButton, MenuItem } from 'react-bootstrap'
 import _ from 'lodash'
@@ -76,7 +77,9 @@ export default React.createClass({
           </ButtonGroup>
         </div>
         <div>
-        {  !_.isEmpty(segs) ? <SegmentList segments={segs} /> : 'Loading...' }
+          <SpinnerWrapper showSpinner={ _.isEmpty(segs) }>
+            <SegmentList segments={segs} />
+          </SpinnerWrapper>
         </div>
       </div>
     )

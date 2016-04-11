@@ -23,22 +23,30 @@ export default React.createClass({
     }
   },
   monthSelected(e, k) {
-    this.setState({
-      month: k,
-      monthStr: new Date(this.state.year, k).toLocaleString('en-au', { month: 'long' })
-    })
-    this.dateChanged(this.state.year, k)
+    if(this.state.month !== k) {
+      this.setState({
+        month: k,
+        monthStr: new Date(this.state.year, k).toLocaleString('en-au', { month: 'long' })
+      })
+      this.dateChanged(this.state.year, k)
+    }
   },
   yearSelected(e, k) {
-    this.setState({
-      year: k
-    })
-    this.dateChanged(k, this.state.month)
+    if(this.state.year !== k) {
+      this.setState({
+        year: k
+      })
+      this.dateChanged(k, this.state.month)
+    }
   },
   dateChanged(year, month) {
+    const segs = this.state.segmentdata.segments
+    segs.map(s => { 
+      _.unset(s, 'effortsmonth') 
+    })
+    this.setState( { 'segmentdata': { 'segments': segs } })
     const initial = moment.utc([ year, month ])
     EffortActions.getAllEffortsForSegments(initial.toISOString(), initial.endOf('month').toISOString())
-    this.setState( { 'segmentdata': {} })
   },
   render() {
     const segs = this.state.segmentdata.segments

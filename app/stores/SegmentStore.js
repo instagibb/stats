@@ -20,8 +20,9 @@ export default Reflux.createStore({
   listSegments() {
     segments.map(s => {
       doRequest(
-        requestBuilder({ url: `segments/${s}` }),
+        requestBuilder({ url: `segments/${s.id}` }),
         (seg) => {
+          seg.park = s.park
           this.data.segments.push(seg)
           if(this.data.segments.length == segments.length) {
             this.trigger(this.data)

@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
+import 'react-bootstrap-table/css/react-bootstrap-table-all.min.css'
 import Bar from './loading/Bar'
 import _ from 'lodash'
 import numeral from 'numeral'
@@ -19,7 +20,7 @@ export default React.createClass({
         let row = {}
         row.id = segment.id
         row.name = segment.name
-        row.location = `${segment.city}`
+        row.location = segment.park
         row.alltime = segment.effort_count
         row.athletes = segment.athlete_count
         let effs = segment.effortsmonth
@@ -47,13 +48,13 @@ export default React.createClass({
       return (
         <div>
           <BootstrapTable data={rows} striped condensed hover search={false} pagination={rows.length > 10} options={ { sizePerPage: 25, noDataText: 'There is no segment data' } }>
-            <TableHeaderColumn dataField="id" isKey={true}>Segment ID</TableHeaderColumn>
+            <TableHeaderColumn width="80" dataAlign="right" dataField="id" dataSort={true} isKey={true}>ID</TableHeaderColumn>
             <TableHeaderColumn dataField="name">Name</TableHeaderColumn>
             <TableHeaderColumn dataField="location">Location</TableHeaderColumn>
-            <TableHeaderColumn dataField="athletes" dataFormat={countFormat} dataSort={true}>All Time Riders</TableHeaderColumn>
-            <TableHeaderColumn dataField="alltime" dataFormat={countFormat} dataSort={true}>All Time Efforts</TableHeaderColumn>
-            <TableHeaderColumn dataField="monthly" dataFormat={countFormat} dataSort={true}>Monthly Efforts</TableHeaderColumn>
-            <TableHeaderColumn dataField="unique" dataFormat={countFormat} dataSort={true}>Monthly Unique Efforts</TableHeaderColumn>
+            <TableHeaderColumn width="130" dataAlign="right" dataField="athletes" dataFormat={countFormat} dataSort={true}>Total Riders</TableHeaderColumn>
+            <TableHeaderColumn width="130" dataAlign="right" dataField="alltime" dataFormat={countFormat} dataSort={true}>Total Efforts</TableHeaderColumn>
+            <TableHeaderColumn dataAlign="right" dataField="monthly" dataFormat={countFormat} dataSort={true}>{this.props.month} Efforts</TableHeaderColumn>
+            <TableHeaderColumn  dataAlign="right" dataField="unique" dataFormat={countFormat} dataSort={true}>{this.props.month} Unique Efforts</TableHeaderColumn>
           </BootstrapTable>
         </div>
       )

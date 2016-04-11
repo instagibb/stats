@@ -87,7 +87,7 @@ export default React.createClass({
         <hr />
         <div>
           <SpinnerWrapper showSpinner={ _.isEmpty(segs) }>
-            <SegmentList segments={segs} />
+            <SegmentList segments={segs} month={this.state.monthStr} />
           </SpinnerWrapper>
         </div>
       </div>

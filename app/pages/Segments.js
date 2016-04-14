@@ -6,6 +6,8 @@ import EffortActions from '../actions/EffortActions'
 import EffortStore from '../stores/EffortStore'
 import SegmentList from '../components/SegmentList'
 import SpinnerWrapper from '../components/loading/SpinnerWrapper'
+import Select from 'react-select'
+import '../../node_modules/react-select/dist/react-select.css'
 
 import { ButtonGroup, DropdownButton, MenuItem } from 'react-bootstrap'
 import _ from 'lodash'
@@ -15,6 +17,33 @@ export default React.createClass({
   mixins: [ 
     Reflux.connect(EffortStore, 'segmentdata') 
   ],
+  monthOpts: [
+    { value: 0, label: 'January' },
+    { value: 1, label: 'February' },
+    { value: 2, label: 'March' },
+    { value: 3, label: 'April' },
+    { value: 4, label: 'May' },
+    { value: 5, label: 'June' },
+    { value: 6, label: 'July' },
+    { value: 7, label: 'August' },
+    { value: 8, label: 'September' },
+    { value: 9, label: 'October' },
+    { value: 10, label: 'November' },
+    { value: 11, label: 'December' }
+  ],
+  yearOpts: [
+    { value: 2010, label: '2010' },
+    { value: 2011, label: '2011' },
+    { value: 2012, label: '2012' },
+    { value: 2013, label: '2013' },
+    { value: 2014, label: '2014' },
+    { value: 2015, label: '2015' },
+    { value: 2016, label: '2016' },
+    { value: 2017, label: '2017' },
+    { value: 2018, label: '2018' },
+    { value: 2019, label: '2019' },
+    { value: 2020, label: '2020' }
+  ],
   getInitialState() {
     return {
       month: new Date().getMonth(),
@@ -22,21 +51,21 @@ export default React.createClass({
       year: new Date().getFullYear()
     }
   },
-  monthSelected(e, k) {
-    if(this.state.month !== k) {
+  monthSelected(opt) {
+    if(this.state.month !== opt.value) {
       this.setState({
-        month: k,
-        monthStr: new Date(this.state.year, k).toLocaleString('en-au', { month: 'long' })
+        month: opt.value,
+        monthStr: opt.label
       })
-      this.dateChanged(this.state.year, k)
+      this.dateChanged(this.state.year, opt.value)
     }
   },
-  yearSelected(e, k) {
-    if(this.state.year !== k) {
+  yearSelected(opt) {
+    if(this.state.year !== opt.value) {
       this.setState({
-        year: k
+        year: opt.value
       })
-      this.dateChanged(k, this.state.month)
+      this.dateChanged(opt.value, this.state.month)
     }
   },
   dateChanged(year, month) {
@@ -54,35 +83,8 @@ export default React.createClass({
     return (
       <div>
         <div>
-          <ButtonGroup>
-            <DropdownButton title={this.state.monthStr} id="bg-nested-dropdown" onSelect={this.monthSelected}>
-              <MenuItem eventKey="0">January</MenuItem>
-              <MenuItem eventKey="1">February</MenuItem>
-              <MenuItem eventKey="2">March</MenuItem>
-              <MenuItem eventKey="3">April</MenuItem>
-              <MenuItem eventKey="4">May</MenuItem>
-              <MenuItem eventKey="5">June</MenuItem>
-              <MenuItem eventKey="6">July</MenuItem>
-              <MenuItem eventKey="7">August</MenuItem>
-              <MenuItem eventKey="8">September</MenuItem>
-              <MenuItem eventKey="9">October</MenuItem>
-              <MenuItem eventKey="10">November</MenuItem>
-              <MenuItem eventKey="11">December</MenuItem>
-            </DropdownButton>
-            <DropdownButton title={this.state.year} id="bg-nested-dropdown" onSelect={this.yearSelected}>
-              <MenuItem eventKey="2010">2010</MenuItem>
-              <MenuItem eventKey="2011">2011</MenuItem>
-              <MenuItem eventKey="2012">2012</MenuItem>
-              <MenuItem eventKey="2013">2013</MenuItem>
-              <MenuItem eventKey="2014">2014</MenuItem>
-              <MenuItem eventKey="2015">2015</MenuItem>
-              <MenuItem eventKey="2016">2016</MenuItem>
-              <MenuItem eventKey="2017">2017</MenuItem>
-              <MenuItem eventKey="2018">2018</MenuItem>
-              <MenuItem eventKey="2019">2019</MenuItem>
-              <MenuItem eventKey="2020">2020</MenuItem>
-            </DropdownButton>
-          </ButtonGroup>
+          <Select className="month" value={this.state.month} options={this.monthOpts} onChange={this.monthSelected} clearable={false} />
+          <Select className="year" value={this.state.year} options={this.yearOpts} onChange={this.yearSelected} clearable={false} />
         </div>
         <hr />
         <div>

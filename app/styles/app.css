@@ -1,0 +1,6 @@
+
+.year, .month {
+	width: 150px;
+	display: inline-block;
+	padding-left: 10px
+}

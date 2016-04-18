@@ -4,6 +4,7 @@ import Reflux from 'reflux'
 import SegmentActions from '../actions/SegmentActions'
 import { requestBuilder, doRequest } from '../utils/requestUtils'
 import Firebase from 'firebase'
+import _ from 'lodash'
 
 export default Reflux.createStore({
   listenables: SegmentActions,
@@ -35,6 +36,7 @@ export default Reflux.createStore({
           seg.park = s.customname
           this.data.segments.push(seg)
           if(this.data.segments.length == segs.length) {
+            this.data.segments = _.sortBy(this.data.segments, [ 'id' ])
             this.trigger(this.data)
           }
         }

@@ -9,7 +9,6 @@ import SpinnerWrapper from '../components/loading/SpinnerWrapper'
 import Select from 'react-select'
 import '../../node_modules/react-select/dist/react-select.css'
 
-import { ButtonGroup, DropdownButton, MenuItem } from 'react-bootstrap'
 import _ from 'lodash'
 import moment from 'moment'
 
@@ -68,14 +67,8 @@ export default React.createClass({
       this.dateChanged(opt.value, this.state.month)
     }
   },
-  dateChanged(year, month) {
-    const segs = this.state.segmentdata.segments
-    segs.map(s => { 
-      _.unset(s, 'effortsmonth') 
-    })
-    this.setState( { 'segmentdata': { 'segments': segs } })
-    const initial = moment.utc([ year, month ])
-    EffortActions.getAllEffortsForSegments(initial.toISOString(), initial.endOf('month').toISOString())
+  dateChanged(year) {
+    EffortActions.getAllEffortsForSegments(year)
   },
   render() {
     const segs = this.state.segmentdata.segments
@@ -89,7 +82,7 @@ export default React.createClass({
         <hr />
         <div>
           <SpinnerWrapper showSpinner={ _.isEmpty(segs) }>
-            <SegmentList segments={segs} month={this.state.monthStr} />
+            <SegmentList segments={segs} year={this.state.year} month={this.state.month} monthStr={this.state.monthStr} />
           </SpinnerWrapper>
         </div>
       </div>

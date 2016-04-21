@@ -2,19 +2,23 @@
 
 import React from 'react'
 import Reflux from 'reflux'
+import AuthStore from '../stores/AuthStore'
+import ConfirmationDialog from '../components/ConfirmationDialog'
 import EffortActions from '../actions/EffortActions'
 import EffortStore from '../stores/EffortStore'
+import SegmentActions from '../actions/SegmentActions'
 import SegmentList from '../components/SegmentList'
+import SegmentDialog from '../components/SegmentDialog'
 import SpinnerWrapper from '../components/loading/SpinnerWrapper'
 import Select from 'react-select'
 import '../../node_modules/react-select/dist/react-select.css'
-
+import { Alert, Button, Glyphicon } from 'react-bootstrap'
 import _ from 'lodash'
-import moment from 'moment'
 
 export default React.createClass({
   mixins: [ 
-    Reflux.connect(EffortStore, 'segmentdata') 
+    Reflux.connect(EffortStore, 'segmentdata'),
+    Reflux.listenTo(EffortStore, 'segmentDataChange' )
   ],
   monthOpts: [
     { value: 0, label: 'January' },
@@ -47,8 +51,70 @@ export default React.createClass({
     return {
       month: new Date().getMonth(),
       monthStr: new Date().toLocaleString('en-au', { month: 'long' }),
-      year: new Date().getFullYear()
+      year: new Date().getFullYear(),
+      modalShow: false,
+      modalType: '',
+      modalAction: {},
+      modalSegment: {}
     }
+  },
+  segmentDataChange() {
+    if(this.state.modalShow) {
+      this.closeSegmentDialog()
+    }
+    if(this.state.confirmShow) {
+      this.closeConfirm()
+    }
+  },
+  addClicked() {
+    this.openSegmentDialog('Add', this.addSegment, {})
+  },
+  editClicked(segment) {
+    this.openSegmentDialog('Edit', this.editSegment, segment)
+  },
+  deleteClicked(segment) {
+    this.openConfirm('Delete', this.deleteSegment, segment)
+  },
+  addSegment(segment) {
+    SegmentActions.addSegment(segment)
+  },
+  editSegment(segment) {
+    SegmentActions.editSegment(segment)
+  },
+  deleteSegment(segment) {
+    SegmentActions.editSegment(segment)
+  },
+  openSegmentDialog(type, action, segment) {
+    this.setState({ 
+      modalShow: true,
+      modalType: type,
+      modalAction: action,
+      modalSegment: segment
+    })
+  },
+  closeSegmentDialog() {
+    this.setState({ 
+      modalShow: false,
+      modalType: '',
+      modalAction: {},
+      modalSegment: {}
+    })
+  },
+  openConfirm(type, action, segment) {
+    this.setState({ 
+      confirmShow: true,
+      confirmType: type,
+      confirmAction: action,
+      confirmSegment: segment
+    })
+  },
+  closeConfirm() {
+    this.setState({ 
+      confirmShow: false,
+      confirmType: '',
+      confirmAction: {},
+      confirmSegment: {}
+    })
   },
   monthSelected(opt) {
     if(this.state.month !== opt.value) {
@@ -72,7 +138,9 @@ export default React.createClass({
   },
   render() {
     const segs = this.state.segmentdata.segments
-
+    const addButton = AuthStore.isAdmin() ? <Button className="addbutton" bsSize="small" bsStyle="primary" onClick={this.addClicked}><Glyphicon glyph="plus" /> Add Segment</Button> : null
+    const segmentDiag = AuthStore.isAdmin() ? this.getSegmentDialog() : null
+    const confirmDiag = AuthStore.isAdmin() ? this.getConfirmDialog() : null
     return (
       <div>
         <div>
@@ -82,10 +150,48 @@ export default React.createClass({
         <hr />
         <div>
           <SpinnerWrapper showSpinner={ _.isEmpty(segs) }>
-            <SegmentList segments={segs} year={this.state.year} month={this.state.month} monthStr={this.state.monthStr} />
+            {addButton} 
+            <SegmentList segments={segs} year={this.state.year} month={this.state.month} monthStr={this.state.monthStr} actions={ this.getActions() }/>
           </SpinnerWrapper>
         </div>
+        {segmentDiag}
+        {confirmDiag}
       </div>
     )
+  },
+  getSegmentDialog() {
+    return (<SegmentDialog 
+      type={this.state.modalType} 
+      action={this.state.modalAction} 
+      show={this.state.modalShow} 
+      hide={this.closeSegmentDialog} 
+      segment={this.state.modalSegment} 
+      error={this.state.error}
+      errorHandler={this.handleError}
+    />)
+  },
+  getConfirmDialog() {
+    const confirmText = 'deleteme'
+    return (<ConfirmationDialog 
+      type={this.state.confirmType} 
+      action={this.state.confirmAction} 
+      show={this.state.confirmShow} 
+      hide={this.closeConfirm} 
+      entity={this.state.confirmSegment} 
+      error={this.state.error}
+      errorHandler={this.handleError}
+      confirmtext={confirmText}
+    ><Alert bsStyle="danger"><h4>Are you sure you want to do this?</h4>If you are please type the following text into the box below: <strong>{confirmText}</strong></Alert>
+    </ConfirmationDialog>
+    )
+  },
+  getActions() {
+    if(AuthStore.isAdmin()) {
+      return [ { name: '', handler: this.editClicked, icon: 'wrench' }, { name: '', handler: this.deleteClicked, icon: 'trash', style: 'danger' } ]
+    }
+    else {
+      return []
+    }
+
   }
 })

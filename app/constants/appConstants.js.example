@@ -3,6 +3,11 @@
 // Strava proxy
 const endpoint = 'http://0.0.0.0:8001'
 
+// Firebase app URL
+const firebase = 'https://<FIREBASEAPP>'
+
 export default {
-  endpoint: endpoint
+  endpoint: endpoint,
+  firebase: firebase
+  admins: [ '<HASHED-ID>' ]
 }

@@ -1,11 +1,21 @@
 'use strict'
 
 import React from 'react'
-import { Grid, Navbar } from 'react-bootstrap'
+import Reflux from 'reflux'
+import { Grid, Nav, NavItem, Navbar } from 'react-bootstrap'
+import AuthActions from '../actions/AuthActions'
+import AuthStore from '../stores/AuthStore'
 import Segments from '../pages/Segments'
 
-export default class extends React.Component {
+export default React.createClass({
+  mixins: [
+    Reflux.connect(AuthStore, 'authdata')
+  ],
+  toggleAuth() {
+    AuthStore.isLoggedIn() ? AuthActions.logOut() : AuthActions.logIn()
+  },
   render() {
+    const loggedIn = this.state.authdata.loggedIn
     return (
       <div>
         <Navbar>
@@ -14,6 +24,9 @@ export default class extends React.Component {
               Strava Stats
             </Navbar.Brand>    
           </Navbar.Header>
+          <Nav pullRight>
+            <NavItem eventKey={1} onClick={this.toggleAuth}>{loggedIn ? 'Log out' : 'Log in'}</NavItem>
+          </Nav>
         </Navbar>
         <Grid>
           <Segments />
@@ -21,4 +34,4 @@ export default class extends React.Component {
       </div>
     )
   }
-}
+})

@@ -1,6 +1,7 @@
 'use strict'
 
 import React from 'react'
+import { Button, ButtonGroup, Glyphicon } from 'react-bootstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import 'react-bootstrap-table/css/react-bootstrap-table-all.min.css'
 import Bar from './loading/Bar'
@@ -17,6 +18,7 @@ export default React.createClass({
     const m = this.props.month
     const y = this.props.year
     const segments = this.props.segments
+    const actions = this.props.actions
     const bar = <Bar />
     if (!_.isEmpty(segments)) { 
       let rows = segments.map((segment) => {
@@ -61,7 +63,14 @@ export default React.createClass({
           row.monthly = -1
           row.monthlyunique = -1
         }
-        row.bar = bar
+
+        if(!_.isEmpty(actions)) {
+          const buttons = actions.map((a, index) => {
+            return <Button ref bsSize="small" key={index} bsStyle={a.style} onClick={a.handler.bind(null, segment)}><Glyphicon glyph={a.icon} /> {a.name}</Button>
+          })
+
+          row.buttons = buttons.length > 1 ? <ButtonGroup>{buttons}</ButtonGroup> : buttons
+        }
 
         return row
       })
@@ -81,6 +90,7 @@ export default React.createClass({
             <TableHeaderColumn dataAlign="right" dataField="ytdunique" dataFormat={countFormat} dataSort={true}>YTD Riders</TableHeaderColumn>
             <TableHeaderColumn dataAlign="right" dataField="monthly" dataFormat={countFormat} dataSort={true}>{shortMonth} Efforts</TableHeaderColumn>
             <TableHeaderColumn dataAlign="right" dataField="monthlyunique" dataFormat={countFormat} dataSort={true}>{shortMonth} Riders</TableHeaderColumn>
+            <TableHeaderColumn dataField="buttons" dataAlign="center" dataSort={false} hidden={_.isEmpty(actions)}>Actions</TableHeaderColumn>
           </BootstrapTable>
         </div>
       )

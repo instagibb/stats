@@ -82,7 +82,7 @@ export default React.createClass({
     SegmentActions.editSegment(segment)
   },
   deleteSegment(segment) {
-    SegmentActions.editSegment(segment)
+    SegmentActions.deleteSegment(segment)
   },
   openSegmentDialog(type, action, segment) {
     this.setState({ 

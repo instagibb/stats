@@ -25,7 +25,7 @@ export default Reflux.createStore({
     return this.data
   },
   getAllEffortsForSegments(y) {
-    const segs = _.isEmpty(this.data.segments) ? SegmentStore.getSegments() : this.data.segments
+    const segs = SegmentStore.getSegments()
     
     // Default start dates
     let start = moment.utc([ y ]).startOf('year').toISOString()
@@ -34,8 +34,6 @@ export default Reflux.createStore({
       start = moment.utc().startOf('year').toISOString()
       end = moment.utc().endOf('month').toISOString()
     } 
-
-    console.log(`START: ${start}, END: ${end}`)
 
     this.data.segments = segs
     const year = moment.utc(start).year()

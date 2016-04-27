@@ -15,6 +15,7 @@ const data = {
 
 export default Reflux.createStore({
   listenables: AuthActions,
+  loading: true,
   init() {
     fireRef.onAuth((authData) => {
       if (authData) {
@@ -47,6 +48,7 @@ export default Reflux.createStore({
       if (!snapshot.exists()) {
         snapshot.ref().set(data.name)
       }
+      this.setLoading(false)
       this.trigger(data)
     })
   },
@@ -54,10 +56,18 @@ export default Reflux.createStore({
     fireRef.unauth()
   },
   loggedOut() {
+    console.log(`NOT LOGGED IN`)
     data.name = null
     data.uid = null
     data.loggedIn = false
+    this.setLoading(false)
     this.trigger(data)
+  },
+  setLoading(load) {
+    this.loading = load
+  },
+  isLoading() {
+    return this.loading
   },
   getDisplayName() {
     return data.name

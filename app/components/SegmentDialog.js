@@ -11,8 +11,8 @@ export default React.createClass({
   },
   buildSegment() {
     const segment = {
-      id: this.props.segment.id,
-      name: this.refs.name.getValue()
+      id: this.refs.id.getValue(),
+      customname: this.refs.name.getValue()
     }
     return segment
   },
@@ -23,14 +23,14 @@ export default React.createClass({
     this.props.errorHandler()
   },
   render() {
+    const type = this.props.type
     const segment = this.props.segment
     const form = (
       <form>
-        <Input type="text" label="ID" ref="id" placeholder="ID..." defaultValue={segment.id} />
-        <Input type="text" label="Name" ref="name" placeholder="Name..." defaultValue={segment.name} />
+        <Input type="text" disabled={type === 'Edit'} label="ID" ref="id" placeholder="ID..." defaultValue={segment.id} />
+        <Input type="text" label="Name" ref="name" placeholder="Name..." defaultValue={segment.customname} />
       </form>
     )
-    const type = this.props.type
     return (
       <Modal show={this.props.show} onHide={this.props.hide}>
         <Modal.Header closeButton>

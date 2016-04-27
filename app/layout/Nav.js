@@ -15,7 +15,14 @@ export default React.createClass({
     AuthStore.isLoggedIn() ? AuthActions.logOut() : AuthActions.logIn()
   },
   render() {
-    const loggedIn = this.state.authdata.loggedIn
+    let authLink
+    if(!AuthStore.isLoading()) {
+      const loggedIn = this.state.authdata.loggedIn
+      authLink = (<Nav pullRight>
+        <NavItem eventKey={1} onClick={this.toggleAuth}>{loggedIn ? 'Log out' : 'Log in'}</NavItem>
+      </Nav>)
+    }
+
     return (
       <div>
         <Navbar>
@@ -24,9 +31,7 @@ export default React.createClass({
               Strava Stats
             </Navbar.Brand>    
           </Navbar.Header>
-          <Nav pullRight>
-            <NavItem eventKey={1} onClick={this.toggleAuth}>{loggedIn ? 'Log out' : 'Log in'}</NavItem>
-          </Nav>
+          {authLink}
         </Navbar>
         <Grid>
           <Segments />

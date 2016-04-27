@@ -122,7 +122,7 @@ export default React.createClass({
         month: opt.value,
         monthStr: opt.label
       })
-      this.dateChanged(this.state.year, opt.value)
+      this.dateChanged(this.state.year)
     }
   },
   yearSelected(opt) {
@@ -130,7 +130,7 @@ export default React.createClass({
       this.setState({
         year: opt.value
       })
-      this.dateChanged(opt.value, this.state.month)
+      this.dateChanged(opt.value)
     }
   },
   dateChanged(year) {

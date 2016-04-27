@@ -7,22 +7,25 @@ import { requestBuilder, doRequest } from '../utils/requestUtils'
 import moment from 'moment'
 import _ from 'lodash'
 
+const data = {
+  segments: [],
+  currentYear: null
+}
+
 export default Reflux.createStore({
   listenables: EffortActions,
-  loading: false,
-  data: {
-    segments: []
-  },
+  loading: false, 
   init() {
-    this.listenTo(SegmentStore, this.otherStoreDataChanged)
+    this.listenTo(SegmentStore, this.segmentStoreDataChanged)
   },
-  otherStoreDataChanged() {
-    this.data.segments = SegmentStore.getSegments()
-    this.trigger(this.data)
+  segmentStoreDataChanged() {
+    console.log('EFFORT STORE - SEGMENTS CHANGED')
+    data.segments = SegmentStore.getSegments()
+    this.trigger(data)
     this.getAllEffortsForSegments()
   },
   getInitialState() {
-    return this.data
+    return data
   },
   getAllEffortsForSegments(y) {
     const segs = SegmentStore.getSegments()
@@ -35,16 +38,17 @@ export default Reflux.createStore({
       end = moment.utc().endOf('month').toISOString()
     } 
 
-    this.data.segments = segs
+    data.segments = segs
     const year = moment.utc(start).year()
-    if(_.isEmpty(this.data.segments[0][year])) {
+    if(_.isEmpty(data.segments[0][year])) {
       console.log(`GETTING EFFORT DATA FOR: ${year}`)
       segs.map(s => {
         this.getAllTheEfforts(year, [], s.id, start, end, 1)
       }) 
     } else {
       console.log(`ALREADY GOT EFFORT DATA FOR: ${year}`)
-      this.trigger(this.data)
+      data.segments = segs
+      this.trigger(data)
     }
   },
   getAllTheEfforts(year, total, seg, s, e, p) {
@@ -55,11 +59,14 @@ export default Reflux.createStore({
         this.getAllTheEfforts(year, total, seg, s, e, ++p)
       }
       else {
-        _.find(this.data.segments, { id: seg })[year] = total
-        this.data.segments = _.sortBy(this.data.segments, [ 'id' ])
-        this.trigger(this.data)
+        _.find(data.segments, { id: seg })[year] = total
+        data.segments = _.sortBy(data.segments, [ 'id' ])
+        this.trigger(data)
       }
     })
+  },
+  hasNew(segs) {
+
   },
   setLoading(load) {
     this.loading = load

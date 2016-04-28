@@ -7,7 +7,7 @@ import { requestBuilder, doRequest } from '../utils/requestUtils'
 import { fireRef } from '../utils/firebaseUtils'
 import _ from 'lodash'
 
-const segPath = 'devsegs'
+const segPath = 'segments'
 
 const data = {
   segments: [],

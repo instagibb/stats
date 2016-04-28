@@ -7,16 +7,15 @@ import { requestBuilder, doRequest } from '../utils/requestUtils'
 import { fireRef } from '../utils/firebaseUtils'
 import _ from 'lodash'
 
-const segPath = 'devsegs'
+const segPath = 'segments'
 
 const data = {
-  segments: []
+  segments: [],
+  loading: true
 }
 
 export default Reflux.createStore({
   listenables: SegmentActions,
-  loading: true,
-
   init() {
     this.listenTo(AuthStore, this.authStoreDataChanged)
   },
@@ -31,7 +30,6 @@ export default Reflux.createStore({
         for(let id in segsObj) {
           segs.push({ 'id': id, 'customname': segsObj[id] })
         }
-        console.log(segs)
         this.listSegments(segs)
       }, (errorObject) => {
         console.log('The read failed: ' + errorObject.code)
@@ -56,21 +54,27 @@ export default Reflux.createStore({
   listSegments(segs) {
     console.log(`LISTING SEGMENTS`)
     data.segments = []
-    segs.map(s => {
-      doRequest(
-        requestBuilder({ url: `segments/${s.id}` }),
-        (seg) => {
-          seg.customname = s.customname
-          data.segments.push(seg)
-          if(data.segments.length == segs.length) {
-            data.segments = _.sortBy(data.segments, [ 'id' ])
-            this.trigger(data)
-
-            this.setupEvents()
+    if(!_.isEmpty(segs)) {
+      segs.map(s => {
+        doRequest(
+          requestBuilder({ url: `segments/${s.id}` }),
+          (seg) => {
+            seg.customname = s.customname
+            data.segments.push(seg)
+            if(data.segments.length == segs.length) {
+              data.segments = _.sortBy(data.segments, [ 'id' ])
+              this.setLoading(false)
+              this.trigger(data)
+              this.setupEvents()
+            }
           }
-        }
-      )
-    })
+        )
+      })
+    } else {
+      this.trigger(data)
+      this.setLoading(false)
+      this.setupEvents()
+    }
   },
   getSegmentFromStrava(s) {
     doRequest(
@@ -106,6 +110,12 @@ export default Reflux.createStore({
       data.segments = data.segments.filter((seg) => seg.id !== id)
       this.trigger(data)
     })
+  },
+  setLoading(load) {
+    data.loading = load
+  },
+  isLoading() {
+    return data.loading
   },
   getSegments() {
     return data.segments

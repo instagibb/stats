@@ -7,13 +7,13 @@ import ConfirmationDialog from '../components/ConfirmationDialog'
 import EffortActions from '../actions/EffortActions'
 import EffortStore from '../stores/EffortStore'
 import SegmentActions from '../actions/SegmentActions'
+import SegmentStore from '../stores/SegmentStore'
 import SegmentList from '../components/SegmentList'
 import SegmentDialog from '../components/SegmentDialog'
 import SpinnerWrapper from '../components/loading/SpinnerWrapper'
 import Select from 'react-select'
 import '../../node_modules/react-select/dist/react-select.css'
 import { Alert, Button, Glyphicon } from 'react-bootstrap'
-import _ from 'lodash'
 
 export default React.createClass({
   mixins: [ 
@@ -149,7 +149,7 @@ export default React.createClass({
         </div>
         <hr />
         <div>
-          <SpinnerWrapper showSpinner={ _.isEmpty(segs) }>
+          <SpinnerWrapper showSpinner={ AuthStore.isLoading() || SegmentStore.isLoading() }>
             {addButton} 
             <SegmentList segments={segs} year={this.state.year} month={this.state.month} monthStr={this.state.monthStr} actions={ this.getActions() }/>
           </SpinnerWrapper>

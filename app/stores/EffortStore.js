@@ -36,13 +36,15 @@ export default Reflux.createStore({
     if(!y) {
       start = moment.utc().startOf('year').toISOString()
       end = moment.utc().endOf('month').toISOString()
-    } 
+    }
+    data.currentYear = moment.utc(start).year()
 
     data.segments = segs
     const year = moment.utc(start).year()
-    if(_.isEmpty(data.segments[0][year])) {
+    const segsToUpdate = this.findNew(segs, data.currentYear)
+    if(!_.isEmpty(segsToUpdate)) {
       console.log(`GETTING EFFORT DATA FOR: ${year}`)
-      segs.map(s => {
+      segsToUpdate.map(s => {
         this.getAllTheEfforts(year, [], s.id, start, end, 1)
       }) 
     } else {
@@ -65,8 +67,14 @@ export default Reflux.createStore({
       }
     })
   },
-  hasNew(segs) {
-
+  findNew(segs, year) {
+    let segsNeedingUpdate = []
+    segs.map( seg => {
+      if(!_.has(seg, year)) {
+        segsNeedingUpdate.push(seg)
+      }
+    })
+    return segsNeedingUpdate
   },
   setLoading(load) {
     this.loading = load

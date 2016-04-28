@@ -80,7 +80,8 @@ module.exports = function (options) {
       mobile: true,
       inject: false,
       template: 'node_modules/html-webpack-template/index.ejs',
-      appMountId: 'app'
+      appMountId: 'app',
+      favicon: 'app/resources/img/favico.png'
     }),
     new ExtractTextPlugin("styles.css")
   ];

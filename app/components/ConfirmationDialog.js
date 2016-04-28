@@ -33,6 +33,7 @@ export default class extends React.Component {
   doAction() {
     if(this.refs.name.getValue() === this.props.confirmtext) {
       this.props.action(this.props.entity)
+      this.setState({ 'disabled': true })
     }
   }
   render() {

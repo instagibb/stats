@@ -141,6 +141,7 @@ export default React.createClass({
     const addButton = AuthStore.isAdmin() ? <Button className="addbutton" bsSize="small" bsStyle="primary" onClick={this.addClicked}><Glyphicon glyph="plus" /> Add Segment</Button> : null
     const segmentDiag = AuthStore.isAdmin() ? this.getSegmentDialog() : null
     const confirmDiag = AuthStore.isAdmin() ? this.getConfirmDialog() : null
+    
     return (
       <div>
         <div>

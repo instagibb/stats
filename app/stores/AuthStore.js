@@ -10,7 +10,8 @@ import crypto from 'crypto'
 const data = {
   uid: null,
   name: null,
-  loggedIn: false
+  loggedIn: false,
+  admin: false
 }
 
 export default Reflux.createStore({
@@ -41,6 +42,7 @@ export default Reflux.createStore({
     data.uid = authData.uid
     data.loggedIn = true
     data.name = authData.facebook.displayName
+    data.admin = _.includes(appConstants.admins, crypto.createHash('sha256').update(this.getUid()).digest('hex'))
 
     // Store uid and displayName if new
     const userRef = fireRef.child('users').child(data.uid)
@@ -79,6 +81,6 @@ export default Reflux.createStore({
     return data.loggedIn
   },
   isAdmin() {
-    return this.isLoggedIn() && _.includes(appConstants.admins, crypto.createHash('sha256').update(this.getUid()).digest('hex'))
+    return this.isLoggedIn() && data.admin
   }
 })

@@ -87,7 +87,7 @@ export default class extends React.Component {
         <BootstrapTable data={rows} striped condensed hover search={false} pagination={rows.length > 25} options={ { sizePerPage: 25, noDataText: 'There is no segment data' } }>
           <TableHeaderColumn width="80" dataAlign="right" dataField="id" dataSort={true} isKey={true}>ID</TableHeaderColumn>
           <TableHeaderColumn dataField="name">Name</TableHeaderColumn>
-          <TableHeaderColumn dataField="customname">Location</TableHeaderColumn>
+          <TableHeaderColumn dataField="customname">Custom Label</TableHeaderColumn>
           <TableHeaderColumn width="130" dataAlign="right" dataField="alltime" dataFormat={countFormat} dataSort={true}>Total Efforts</TableHeaderColumn>
           <TableHeaderColumn width="130" dataAlign="right" dataField="athletes" dataFormat={countFormat} dataSort={true}>Total Riders</TableHeaderColumn>
           <TableHeaderColumn dataAlign="right" dataField="ytd" dataFormat={countFormat} dataSort={true}>YTD Efforts</TableHeaderColumn>

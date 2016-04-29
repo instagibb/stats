@@ -7,7 +7,7 @@ export default React.createClass({
   buildSegment() {
     const segment = {
       id: this.refs.id.getValue(),
-      customname: this.refs.name.getValue()
+      customname: this.refs.custom.getValue()
     }
     return segment
   },
@@ -20,7 +20,7 @@ export default React.createClass({
     const form = (
       <form>
         <Input type="text" disabled={type === 'Edit'} label="ID" ref="id" placeholder="ID..." defaultValue={segment.id} />
-        <Input type="text" label="Name" ref="name" placeholder="Name..." defaultValue={segment.customname} />
+        <Input type="text" label="Custom Label (Optional)" ref="custom" placeholder="Enter a custom label..." defaultValue={segment.customname} />
       </form>
     )
     return (

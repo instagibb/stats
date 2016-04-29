@@ -9,17 +9,22 @@ import _ from 'lodash'
 import moment from 'moment'
 import numeral from 'numeral'
 
-export default React.createClass({
-  propTypes: {
-    segments: React.PropTypes.array
-  },
+const countFormat = (cell) =>  _.isNumber(cell) ? (cell !== -1 ? numeral(cell).format('0,0') : 'N/A') : cell 
+const bar = <Bar />
 
+export default class extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.renderId !== this.props.renderId
+  }
   render() {
     const m = this.props.month
     const y = this.props.year
     const segments = this.props.segments
     const actions = this.props.actions
-    const bar = <Bar />
     
     let rows = segments.map((segment) => {
       let row = {}
@@ -75,7 +80,6 @@ export default React.createClass({
       return row
     })
 
-    const countFormat = (cell) =>  _.isNumber(cell) ? (cell !== -1 ? numeral(cell).format('0,0') : 'N/A') : cell 
     const shortMonth = moment.monthsShort(m)
 
     return (
@@ -95,4 +99,4 @@ export default React.createClass({
       </div>
     )
   }
-})
+}

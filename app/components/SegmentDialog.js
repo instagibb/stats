@@ -4,11 +4,6 @@ import React from 'react'
 import { Button, Glyphicon, Input, Modal } from 'react-bootstrap'
 
 export default React.createClass({
-  getInitialState() {
-    return {
-      validationErrs: {}
-    }
-  },
   buildSegment() {
     const segment = {
       id: this.refs.id.getValue(),
@@ -18,9 +13,6 @@ export default React.createClass({
   },
   doAction() {
     this.props.action(this.buildSegment())
-  },
-  closeError() {
-    this.props.errorHandler()
   },
   render() {
     const type = this.props.type

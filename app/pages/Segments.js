@@ -55,7 +55,8 @@ export default React.createClass({
       modalShow: false,
       modalType: '',
       modalAction: {},
-      modalSegment: {}
+      modalSegment: {},
+      suppressRender: false
     }
   },
   segmentDataChange() {
@@ -67,6 +68,7 @@ export default React.createClass({
     }
   },
   addClicked() {
+    console.log('ADD CLICKED')
     this.openSegmentDialog('Add', this.addSegment, {})
   },
   editClicked(segment) {
@@ -137,10 +139,11 @@ export default React.createClass({
     EffortActions.getAllEffortsForSegments(year)
   },
   render() {
+    const admin = AuthStore.isAdmin()
     const segs = this.state.segmentdata.segments
-    const addButton = AuthStore.isAdmin() ? <Button className="addbutton" bsSize="small" bsStyle="primary" onClick={this.addClicked}><Glyphicon glyph="plus" /> Add Segment</Button> : null
-    const segmentDiag = AuthStore.isAdmin() ? this.getSegmentDialog() : null
-    const confirmDiag = AuthStore.isAdmin() ? this.getConfirmDialog() : null
+    const addButton = admin ? <Button className="addbutton" bsSize="small" bsStyle="primary" onClick={this.addClicked}><Glyphicon glyph="plus" /> Add Segment</Button> : null
+    const segmentDiag = admin ? this.getSegmentDialog() : null
+    const confirmDiag = admin ? this.getConfirmDialog() : null
     
     return (
       <div>
@@ -152,7 +155,7 @@ export default React.createClass({
         <div>
           <SpinnerWrapper showSpinner={ AuthStore.isLoading() || SegmentStore.isLoading() }>
             {addButton} 
-            <SegmentList segments={segs} year={this.state.year} month={this.state.month} monthStr={this.state.monthStr} actions={ this.getActions() }/>
+            <SegmentList segments={segs} year={this.state.year} month={this.state.month} monthStr={this.state.monthStr} actions={ this.getActions() } renderId={this.state.segmentdata.seguuid}/>
           </SpinnerWrapper>
         </div>
         {segmentDiag}
@@ -167,8 +170,6 @@ export default React.createClass({
       show={this.state.modalShow} 
       hide={this.closeSegmentDialog} 
       segment={this.state.modalSegment} 
-      error={this.state.error}
-      errorHandler={this.handleError}
     />)
   },
   getConfirmDialog() {
@@ -179,8 +180,6 @@ export default React.createClass({
       show={this.state.confirmShow} 
       hide={this.closeConfirm} 
       entity={this.state.confirmSegment} 
-      error={this.state.error}
-      errorHandler={this.handleError}
       confirmtext={confirmText}
     ><Alert bsStyle="danger"><h4>Are you sure you want to do this?</h4>If you are please type the following text into the box below: <strong>{confirmText}</strong></Alert>
     </ConfirmationDialog>

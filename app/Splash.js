@@ -8,8 +8,7 @@ export default class extends React.Component {
     return (
       <div>
         <Nav />
-        <hr />
-        <div className="footer">
+        <div>
           <div className="footer-content">{'Created by Andrew Gibb · 2016 · '}<a href="https://github.com/instagibb/stats">GitHub</a></div>
         </div>
       </div>

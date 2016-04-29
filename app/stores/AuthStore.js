@@ -81,6 +81,6 @@ export default Reflux.createStore({
     return data.loggedIn
   },
   isAdmin() {
-    return this.isLoggedIn() && data.admin
+    return data.loggedIn && data.admin
   }
 })

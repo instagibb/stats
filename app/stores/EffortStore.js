@@ -6,9 +6,11 @@ import SegmentStore from './SegmentStore'
 import { requestBuilder, doRequest } from '../utils/requestUtils'
 import moment from 'moment'
 import _ from 'lodash'
+import uuid from 'uuid'
 
 const data = {
   segments: [],
+  seguuid: uuid.v4(),
   currentYear: null
 }
 
@@ -20,8 +22,7 @@ export default Reflux.createStore({
   },
   segmentStoreDataChanged() {
     console.log('EFFORT STORE - SEGMENTS CHANGED')
-    data.segments = SegmentStore.getSegments()
-    this.trigger(data)
+    this.updateSegs(SegmentStore.getSegments())
     this.getAllEffortsForSegments()
   },
   getInitialState() {
@@ -49,8 +50,7 @@ export default Reflux.createStore({
       }) 
     } else {
       console.log(`ALREADY GOT EFFORT DATA FOR: ${year}`)
-      data.segments = segs
-      this.trigger(data)
+      this.updateSegs(segs)
     }
   },
   getAllTheEfforts(year, total, seg, s, e, p) {
@@ -62,10 +62,14 @@ export default Reflux.createStore({
       }
       else {
         _.find(data.segments, { id: seg })[year] = total
-        data.segments = _.sortBy(data.segments, [ 'id' ])
-        this.trigger(data)
+        this.updateSegs(_.sortBy(data.segments, [ 'id' ]))
       }
     })
+  },
+  updateSegs(segs) {
+    data.segments = segs
+    data.seguuid = uuid.v4()
+    this.trigger(data)
   },
   findNew(segs, year) {
     let segsNeedingUpdate = []

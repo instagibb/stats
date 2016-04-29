@@ -1,6 +1,6 @@
 # Strava stats
 
-This is a small project for John Dawson of [Tassie Trails](http://www.tassietrails.org) which is hosted at https://stats.andrewgibb.info
+This is a small project for John Dawson of [Tassie Trails](http://www.tassietrails.org) and is hosted at https://stats.andrewgibb.info
 
 ### Why
 This tool extracts trail usage counts for given Strava segments using the Strava V3 API. This is useful because the Strava website is very limited in the count information that it provides and if you want counts from last month or last year... forget about it.
